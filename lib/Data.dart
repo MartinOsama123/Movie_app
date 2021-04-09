@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:movie_app/Model/MovieModel.dart';
 import 'package:http/http.dart' as http;
 class Data {
-  static const IP_ADDRESS = "https://api.themoviedb.org/3/movie/";
+  static const IP_ADDRESS = "https://api.themoviedb.org/3/movie";
   static const API = "api_key=3341631117f8da98766219dfd5703269";
 
-  static Future<MovieModel> getNowPlaying({int page = 1}) async {
+  static Future<List<Results>> getNowPlaying({int page = 1}) async {
     MovieModel movieModel;
 
     var response = await http.get(
@@ -20,9 +20,10 @@ class Data {
       }
     }
     print("Finsihed");
-    return movieModel;
+    print("$IP_ADDRESS/now_playing?$API&page=$page");
+    return movieModel.results;
   }
-  static Future<MovieModel> getTopRated({int page = 1}) async {
+  static Future<List<Results>> getTopRated({int page = 1}) async {
     MovieModel movieModel;
 
     var response = await http.get(
@@ -35,9 +36,9 @@ class Data {
       }
     }
     print("Finsihed");
-    return movieModel;
+    return movieModel.results;
   }
-  static Future<MovieModel> searchMovies({String query="",int page = 1}) async {
+  static Future<List<Results>> searchMovies({String query="",int page = 1}) async {
     MovieModel movieModel;
 
     var response = await http.get(
@@ -50,6 +51,6 @@ class Data {
       }
     }
     print("Finsihed");
-    return movieModel;
+    return movieModel.results;
   }
 }

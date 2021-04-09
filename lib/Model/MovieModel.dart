@@ -1,6 +1,6 @@
 class MovieModel {
 
-  int page;
+  var page;
   List<Results> results;
 
 
@@ -34,20 +34,20 @@ class MovieModel {
 
 
 class Results {
-  bool adult;
-  String backdropPath;
+  var adult;
+  var backdropPath;
   List<int> genreIds;
-  int id;
-  String originalLanguage;
-  String originalTitle;
-  String overview;
-  double popularity;
-  String posterPath;
-  String releaseDate;
-  String title;
-  bool video;
-  double voteAverage;
-  int voteCount;
+  var id;
+  var originalLanguage;
+  var originalTitle;
+  var overview;
+  var popularity;
+  var posterPath;
+  var releaseDate;
+  var title;
+  var video;
+  var voteAverage;
+  var voteCount;
 
   Results(
       {this.adult,
