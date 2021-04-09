@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:movie_app/Data.dart';
 import 'package:movie_app/Model/MovieModel.dart';
 
 
@@ -36,7 +37,7 @@ class DetailedScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
                     child: Row(
                       children: [
                         SizedBox(
@@ -51,12 +52,6 @@ class DetailedScreen extends StatelessWidget {
                         Spacer(),
                         IconButton(
                             icon: Icon(
-                              Icons.aspect_ratio_outlined,
-                              color: Colors.green,
-                            ),
-                            onPressed: () {}),
-                        IconButton(
-                            icon: Icon(
                               Icons.favorite_border,
                               color: Colors.red,
                             ),
@@ -64,40 +59,34 @@ class DetailedScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   Align(
                       alignment: Alignment.centerLeft,
-                      child: RatingBarIndicator(
-                        rating: movieResult.voteAverage > 5 ? movieResult.voteAverage / 5 : movieResult.voteAverage,
-                        itemBuilder: (context, index) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        itemCount: 5,
-                        itemSize: 20.0,
-                        direction: Axis.horizontal,
-                      ),),
+                      child: Row(
+                        children: [
+                          RatingBarIndicator(
+                            rating: movieResult.voteAverage > 5 ? movieResult.voteAverage / 5 : movieResult.voteAverage,
+                            itemBuilder: (context, index) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemCount: 5,
+                            itemSize: 30.0,
+                            direction: Axis.horizontal,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text("(${movieResult.voteCount})",style: TextStyle(fontSize: 16),),
+                          )
+                        ],
+                      )),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 18, 0, 40),
-                    child: Row(children: [
-                      Column(
-                        children: [
-                          const  Text("Color"),
-                     //     Text(movieResult.specifications.firstWhere((element) => element.specId == 1).valueNameEn,style: TextStyle(fontWeight: FontWeight.bold),),
-                        ],
-                      ),
-                      Spacer(),
-                      Column(
-                        children: [
-                          const  Text("Made In"),
-                   //       Text(movieResult.specifications.firstWhere((element) => element.specId == 7).valueNameEn,style: TextStyle(fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      Spacer()
-                    ],),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: GenresWidget(genresId: movieResult.genreIds,),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                    child: Align(alignment: Alignment.centerLeft,child: const Text("Details")),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                    child: Align(alignment: Alignment.centerLeft,child: const Text("Details",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 20),)),
                   ),
                   Text(movieResult.overview)
                 ],
@@ -106,6 +95,60 @@ class DetailedScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class GenresWidget extends StatefulWidget {
+  final genresId;
+  const GenresWidget({
+    Key key, this.genresId,
+  }) : super(key: key);
+
+  @override
+  _GenresWidgetState createState() => _GenresWidgetState(genresId);
+}
+
+class _GenresWidgetState extends State<GenresWidget> {
+  Future<Map<int,String>> genres;
+  final genresId;
+
+  _GenresWidgetState(this.genresId);
+void initState(){
+  super.initState();
+  genres = _fetchGenres();
+}
+  Future<Map<int,String>> _fetchGenres() async {
+    var temp =  await Data.getGenres();
+    print("TEMP = $temp");
+    return temp;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: genres,
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+        return Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            height: 50,
+            child: ListView.builder(itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(child:  Center(child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
+                  child: Text(snapshot.data[genresId[index]]),
+                )),
+                    decoration: BoxDecoration(color: Colors.blueGrey,borderRadius: BorderRadius.circular(20))),
+              );
+            },shrinkWrap: true,scrollDirection: Axis.horizontal,itemCount: genresId.length,),
+          ),
+        );} else {
+        return CircularProgressIndicator();
+    }
+      },
+
     );
   }
 }
