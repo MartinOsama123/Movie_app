@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:movie_app/Model/MovieModel.dart';
 
@@ -117,12 +118,18 @@ class ProductWidget extends StatelessWidget {
               style: TextStyle(fontSize: 14),
               overflow: TextOverflow.ellipsis,
             )),
-        Row(
-          children: [
-            // Text("${productsModel.productPrice} L.E",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w700,color: AppColor.PrimaryColor),),
-            // Spacer(),
-            // IconButton(icon: Icon(Icons.add_shopping_cart,color: AppColor.PrimaryColor,), onPressed: () {})
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical:2),
+          child: RatingBarIndicator(
+            rating: movieResult.voteAverage > 5 ? movieResult.voteAverage / 5 : movieResult.voteAverage,
+            itemBuilder: (context, index) => Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            itemCount: 5,
+            itemSize: 15.0,
+            direction: Axis.horizontal,
+          ),
         ),
         Spacer()
       ],
