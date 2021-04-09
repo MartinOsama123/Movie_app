@@ -13,7 +13,7 @@ class DetailedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(backgroundColor: Colors.transparent,elevation: 0,leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.red),onPressed: (){Navigator.pop(context);},),),
+      appBar: AppBar(backgroundColor: Colors.transparent,elevation: 0,leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.white),onPressed: (){Navigator.pop(context);},),),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -65,19 +65,18 @@ class DetailedScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           RatingBarIndicator(
-                            rating: movieResult.voteAverage > 5 ? movieResult.voteAverage / 5 : movieResult.voteAverage,
+                            rating: movieResult.voteAverage,
                             itemBuilder: (context, index) => Icon(
                               Icons.star,
                               color: Colors.amber,
                             ),
-                            itemCount: 5,
-                            itemSize: 30.0,
+                            itemCount: 10,
+                            itemSize: 20.0,
                             direction: Axis.horizontal,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Text("(${movieResult.voteCount})",style: TextStyle(fontSize: 16),),
-                          )
+                            child: Text("(${movieResult.voteCount})",style: TextStyle(fontSize: 16)))
                         ],
                       )),
                   Padding(
@@ -110,32 +109,28 @@ class GenresWidget extends StatefulWidget {
 }
 
 class _GenresWidgetState extends State<GenresWidget> {
-  Future<Map<int,String>> genres;
+
   final genresId;
 
   _GenresWidgetState(this.genresId);
-void initState(){
-  super.initState();
-  genres = _fetchGenres();
-}
+
   Future<Map<int,String>> _fetchGenres() async {
-    var temp =  await Data.getGenres();
-    print("TEMP = $temp");
-    return temp;
+    return await Data.getGenres();
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: genres,
+      future: _fetchGenres(),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
         return Align(
           alignment: Alignment.centerLeft,
           child: SizedBox(
-            height: 50,
+            height: 45,
             child: ListView.builder(itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Container(child:  Center(child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
                   child: Text(snapshot.data[genresId[index]]),

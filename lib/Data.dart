@@ -5,14 +5,14 @@ import 'package:movie_app/Model/GenreModel.dart';
 import 'package:movie_app/Model/MovieModel.dart';
 import 'package:http/http.dart' as http;
 class Data {
-  static const IP_ADDRESS = "https://api.themoviedb.org/3/movie";
+  static const IP_ADDRESS = "https://api.themoviedb.org/3";
   static const API = "api_key=3341631117f8da98766219dfd5703269";
 
   static Future<List<Results>> getNowPlaying({int page = 1}) async {
     MovieModel movieModel;
 
     var response = await http.get(
-        Uri.parse("$IP_ADDRESS/now_playing?$API&page=$page"));
+        Uri.parse("$IP_ADDRESS/movie/now_playing?$API&language=en-US&page=$page"));
     if (response != null && response.statusCode == 200) {
       try {
         movieModel = MovieModel.fromJson(jsonDecode(response.body));
@@ -28,7 +28,7 @@ class Data {
     MovieModel movieModel;
 
     var response = await http.get(
-        Uri.parse("$IP_ADDRESS/top_rated?$API&page=$page"));
+        Uri.parse("$IP_ADDRESS/movie/top_rated?$API&language=en-US&page=$page"));
     if (response != null && response.statusCode == 200) {
       try {
         movieModel = MovieModel.fromJson(jsonDecode(response.body));
@@ -51,7 +51,7 @@ class Data {
         print(e.toString());
       }
     }
-    print("Finsihed");
+    print("$IP_ADDRESS/search/movie?query=$query&$API&page=$page");
     return movieModel.results;
   }
 
