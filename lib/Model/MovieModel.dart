@@ -35,7 +35,9 @@ class MovieModel {
 
 class Results {
   var adult;
-  var backdropPath;
+  var _backdropPath;
+
+  get backdropPath => "https://image.tmdb.org/t/p/w780/$_backdropPath";
   List<int> genreIds;
   var id;
   var originalLanguage;
@@ -51,7 +53,7 @@ class Results {
 
   Results(
       {this.adult,
-        this.backdropPath,
+
         this.genreIds,
         this.id,
         this.originalLanguage,
@@ -65,9 +67,10 @@ class Results {
         this.voteAverage,
         this.voteCount});
 
+
   Results.fromJson(Map<String, dynamic> json) {
     adult = json['adult'];
-    backdropPath = json['backdrop_path'];
+    _backdropPath = json['backdrop_path'];
     genreIds = json['genre_ids'].cast<int>();
     id = json['id'];
     originalLanguage = json['original_language'];
@@ -85,7 +88,7 @@ class Results {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['adult'] = this.adult;
-    data['backdrop_path'] = this.backdropPath;
+    data['backdrop_path'] = this._backdropPath;
     data['genre_ids'] = this.genreIds;
     data['id'] = this.id;
     data['original_language'] = this.originalLanguage;

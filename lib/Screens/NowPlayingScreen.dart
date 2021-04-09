@@ -5,6 +5,7 @@ import 'package:movie_app/Model/MovieModel.dart';
 
 
 import '../Data.dart';
+import 'DetailedScreen.dart';
 
 class NowPlayingScreen extends StatefulWidget {
 
@@ -79,6 +80,8 @@ class ProductWidget extends StatelessWidget {
     this.movieResult,
   }) : super(key: key);
 
+  get productsModel => null;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -86,7 +89,7 @@ class ProductWidget extends StatelessWidget {
         GestureDetector(
           onTap: (){
             print(movieResult.id);
-   //         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DetailedScreen(product: productsModel,)));
+            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DetailedScreen(movieResult: movieResult,)));
           },
           child: Container(
             width: 150,
@@ -95,7 +98,7 @@ class ProductWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
                 child: CachedNetworkImage(
                     imageUrl:
-                    "https://image.tmdb.org/t/p/w780/${movieResult.backdropPath}",
+                    movieResult.backdropPath,
                     progressIndicatorBuilder: (context, url, downloadProgress) =>
                         Center(
                             child: CircularProgressIndicator(
