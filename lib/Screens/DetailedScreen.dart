@@ -20,6 +20,7 @@ class DetailedScreen extends StatelessWidget {
           children: [
             Container(
               height: 300,
+              width: MediaQuery.of(context).size.width,
               child: CachedNetworkImage(
                   imageUrl:
                   movieResult.backdropPath,
@@ -29,7 +30,7 @@ class DetailedScreen extends StatelessWidget {
                             value: downloadProgress.progress,
                             backgroundColor: Colors.red,
                           )),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  errorWidget: (context, url, error) =>  Container(child: Image.asset("assets/download.png",fit: BoxFit.cover,)),
                   fit: BoxFit.fill),
             ),
             Padding(
