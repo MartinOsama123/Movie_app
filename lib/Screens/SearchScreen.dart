@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -16,6 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchQueryController = TextEditingController();
   String searchQuery = "", previousSearch = "";
   bool _showClearButton = false;
+  bool _isLoading = true;
   final PagingController<int, Results> _pagingController =
       PagingController(firstPageKey: 1);
 
@@ -71,9 +75,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       pagingController: _pagingController,
                       shrinkWrap: true,
                       physics: BouncingScrollPhysics(),
-
                       builderDelegate: PagedChildBuilderDelegate<Results>(
-                        noItemsFoundIndicatorBuilder: (context) => Center(child: CircularProgressIndicator(),),
+                        noItemsFoundIndicatorBuilder: (context) => Center(child: _isLoading ? CircularProgressIndicator() : Text("No items found...",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 20),),),
                           itemBuilder: (context, item, index) => Column(
                                 children: [
                                   Padding(
@@ -173,7 +176,15 @@ class _SearchScreenState extends State<SearchScreen> {
       //  onChanged: (query) => updateSearchQuery(query),
         onSubmitted: (value) {
           updateSearchQuery(value);
+         setState(() {
+           _isLoading = true;
+         });
           _pagingController.refresh();
+          new Timer(const Duration(milliseconds: 8000), () {
+            setState(() {
+              _isLoading = false;
+            });
+          });
         });
   }
 
