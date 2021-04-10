@@ -173,7 +173,18 @@ class _SearchScreenState extends State<SearchScreen> {
           hintStyle: TextStyle(color: Colors.grey),
         ),
         style: TextStyle(color: Colors.black, fontSize: 16.0),
-      //  onChanged: (query) => updateSearchQuery(query),
+        onChanged: (value) {
+          updateSearchQuery(value);
+          setState(() {
+            _isLoading = true;
+          });
+          _pagingController.refresh();
+          new Timer(const Duration(milliseconds: 8000), () {
+            setState(() {
+              _isLoading = false;
+            });
+          });
+        },
         onSubmitted: (value) {
           updateSearchQuery(value);
          setState(() {
