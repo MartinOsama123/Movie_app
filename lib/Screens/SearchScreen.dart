@@ -28,9 +28,11 @@ class _SearchScreenState extends State<SearchScreen> {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(searchQuery, pageKey);
     });
-    _searchQueryController.addListener(() { setState(() {
-      _showClearButton = _searchQueryController.text.length > 0;
-    });});
+    _searchQueryController.addListener(() {
+      setState(() {
+        _showClearButton = _searchQueryController.text.length > 0;
+      });
+    });
     super.initState();
   }
 
@@ -76,20 +78,31 @@ class _SearchScreenState extends State<SearchScreen> {
                       shrinkWrap: true,
                       physics: BouncingScrollPhysics(),
                       builderDelegate: PagedChildBuilderDelegate<Results>(
-                        noItemsFoundIndicatorBuilder: (context) => Center(child: _isLoading ? CircularProgressIndicator() : Text("No items found...",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 20),),),
+                          noItemsFoundIndicatorBuilder: (context) => Center(
+                                child: _isLoading
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                        "No items found...",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20),
+                                      ),
+                              ),
                           itemBuilder: (context, item, index) => Column(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: GestureDetector(
                                       onTap: () {
+                                        print(item.id);
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (BuildContext context) =>
-                                                    DetailedScreen(
-                                                      movieResult: item,
-                                                    )));
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        DetailedScreen(
+                                                          movieResult: item,
+                                                        )));
                                       },
                                       child: ListTile(
                                         leading: Container(
@@ -101,17 +114,23 @@ class _SearchScreenState extends State<SearchScreen> {
                                             child: CachedNetworkImage(
                                                 imageUrl: item.backdropPath,
                                                 progressIndicatorBuilder: (context,
-                                                        url, downloadProgress) =>
+                                                        url,
+                                                        downloadProgress) =>
                                                     Center(
                                                         child:
                                                             CircularProgressIndicator(
                                                       value: downloadProgress
                                                           .progress,
-                                                      backgroundColor: Colors.red,
+                                                      backgroundColor:
+                                                          Colors.red,
                                                     )),
                                                 errorWidget:
                                                     (context, url, error) =>
-                                                        Container(child: Image.asset("assets/download.png",fit: BoxFit.cover,)),
+                                                        Container(
+                                                            child: Image.asset(
+                                                          "assets/download.png",
+                                                          fit: BoxFit.cover,
+                                                        )),
                                                 fit: BoxFit.cover),
                                           ),
                                         ),
@@ -119,8 +138,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                             style:
                                                 TextStyle(color: Colors.black)),
                                         subtitle: RatingBarIndicator(
-                                          rating: double?.tryParse(
-                                                  item.voteAverage.toString()) ??
+                                          rating: double?.tryParse(item
+                                                  .voteAverage
+                                                  .toString()) ??
                                               1,
                                           itemBuilder: (context, index) => Icon(
                                             Icons.star,
@@ -131,14 +151,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                           direction: Axis.horizontal,
                                         ),
                                         trailing: IconButton(
-                                          icon: Icon(Icons.arrow_forward_rounded),
-                                          onPressed: () {Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (BuildContext context) =>
-                                                      DetailedScreen(
-                                                        movieResult: item,
-                                                      )));},
+                                          icon:
+                                              Icon(Icons.arrow_forward_rounded),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        DetailedScreen(
+                                                          movieResult: item,
+                                                        )));
+                                          },
                                         ),
                                       ),
                                     ),
@@ -167,29 +191,30 @@ class _SearchScreenState extends State<SearchScreen> {
         decoration: InputDecoration(
           hintText: "Search Data...",
           contentPadding: const EdgeInsets.all(20),
-
           suffixIcon: _getClearButton(),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
           hintStyle: TextStyle(color: Colors.grey),
         ),
         style: TextStyle(color: Colors.black, fontSize: 16.0),
-        onChanged: (value) {
+        //     onChanged: (value) {
+        //       setState(() {
+        //         _isLoading = true;
+        //       });
+        //       updateSearchQuery(value);
+        //
+        //       new Timer(const Duration(milliseconds: 1000), () {
+        //         setState(() {
+        // _isLoading = false;
+        // }
+        //         );
+        //       });
+        //
+        //     },
+        onSubmitted: (value) {
           updateSearchQuery(value);
           setState(() {
             _isLoading = true;
           });
-          _pagingController.refresh();
-          new Timer(const Duration(milliseconds: 8000), () {
-            setState(() {
-              _isLoading = false;
-            });
-          });
-        },
-        onSubmitted: (value) {
-          updateSearchQuery(value);
-         setState(() {
-           _isLoading = true;
-         });
           _pagingController.refresh();
           new Timer(const Duration(milliseconds: 8000), () {
             setState(() {
@@ -204,6 +229,7 @@ class _SearchScreenState extends State<SearchScreen> {
       searchQuery = newQuery;
     });
   }
+
   Widget _getClearButton() {
     if (!_showClearButton) {
       return null;
