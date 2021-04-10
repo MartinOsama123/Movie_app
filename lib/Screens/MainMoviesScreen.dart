@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:movie_app/Model/DBModel.dart';
 import 'package:movie_app/Model/MovieModel.dart';
+import 'package:movie_app/Widgets/LikeButtonWidget.dart';
 
 import '../Data.dart';
 import 'DetailedScreen.dart';
@@ -21,13 +25,17 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       PagingController(firstPageKey: 1);
 
   _NowPlayingScreenState(this.isNowPlaying);
+
+  var data;
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
+
     super.initState();
   }
+
 
   Future<void> _fetchPage(int pageKey) async {
     var newItems;
@@ -78,9 +86,14 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
                   builderDelegate: PagedChildBuilderDelegate<Results>(
-                      itemBuilder: (context, item, index) => ProductWidget(
-                            movieResult: item,
-                          )),
+                      itemBuilder: (context, item, index) => FutureBuilder(
+                        future: data,
+                        builder: (context, snapshot) {
+                            return ProductWidget(
+                              movieResult: item,
+                            );
+                        },
+                      )),
                 ),
               ),
             ],
@@ -91,15 +104,19 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   }
 }
 
-class ProductWidget extends StatelessWidget {
+class ProductWidget extends StatefulWidget {
   final Results movieResult;
 
-  const ProductWidget({
+   ProductWidget({
     Key key,
     this.movieResult,
   }) : super(key: key);
 
-  get productsModel => null;
+  @override
+  _ProductWidgetState createState() => _ProductWidgetState();
+}
+
+class _ProductWidgetState extends State<ProductWidget> {
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +126,11 @@ class ProductWidget extends StatelessWidget {
           flex: 10,
           child: GestureDetector(
             onTap: () {
-              print(movieResult.id);
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => DetailedScreen(
-                            movieResult: movieResult,
+                            movieResult: widget.movieResult,
                           )));
             },
             child: Stack(
@@ -125,7 +141,7 @@ class ProductWidget extends StatelessWidget {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
                       child: CachedNetworkImage(
-                          imageUrl: movieResult.backdropPath,
+                          imageUrl: widget.movieResult.backdropPath,
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) => Center(
                                       child: CircularProgressIndicator(
@@ -148,13 +164,7 @@ class ProductWidget extends StatelessWidget {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10)),
                           child: Center(
-                              child: IconButton(
-                                  icon: Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.red,
-                                    size: 15,
-                                  ),
-                                  onPressed: () {}))),
+                              child: LikeButtonWidget(movieResult: widget.movieResult))),
                     ))
               ],
             ),
@@ -166,7 +176,7 @@ class ProductWidget extends StatelessWidget {
           child: Align(
               alignment: Alignment.center,
               child: Text(
-                movieResult.originalTitle,
+                widget.movieResult.originalTitle,
                 style: TextStyle(fontSize: 14),
                 overflow: TextOverflow.ellipsis,
               )),
@@ -174,7 +184,7 @@ class ProductWidget extends StatelessWidget {
         Flexible(
           flex: 1,
           child: RatingBarIndicator(
-            rating: double?.tryParse(movieResult.voteAverage.toString()) ?? 1,
+            rating: double?.tryParse(widget.movieResult.voteAverage.toString()) ?? 1,
             itemBuilder: (context, index) => Icon(
               Icons.star,
               color: Colors.amber,

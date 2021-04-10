@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movie_app/Data.dart';
+import 'package:movie_app/Model/DBModel.dart';
 import 'package:movie_app/Model/MovieModel.dart';
+import 'package:movie_app/Widgets/LikeButtonWidget.dart';
 
 
 class DetailedScreen extends StatelessWidget {
@@ -50,12 +52,7 @@ class DetailedScreen extends StatelessWidget {
                           ),
                         ),
                         Spacer(),
-                        IconButton(
-                            icon: Icon(
-                              Icons.favorite_border,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {}),
+                        LikeButtonWidget(movieResult: movieResult,),
                       ],
                     ),
                   ),
@@ -97,6 +94,7 @@ class DetailedScreen extends StatelessWidget {
     );
   }
 }
+
 
 class GenresWidget extends StatefulWidget {
   final genresId;
