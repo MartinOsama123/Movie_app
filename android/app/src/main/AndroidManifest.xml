@@ -2,7 +2,7 @@
     package="com.martinosama.movie_app">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="movie_app"
+        android:label="Movies App"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

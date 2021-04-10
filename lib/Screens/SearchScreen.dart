@@ -65,84 +65,87 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               if (searchQuery.isNotEmpty)
                 Expanded(
-                  child: PagedListView<int, Results>(
-                    pagingController: _pagingController,
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+                    child: PagedListView<int, Results>(
+                      pagingController: _pagingController,
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
 
-                    builderDelegate: PagedChildBuilderDelegate<Results>(
-                      noItemsFoundIndicatorBuilder: (context) => Center(child: CircularProgressIndicator(),),
-                        itemBuilder: (context, item, index) => Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  DetailedScreen(
-                                                    movieResult: item,
-                                                  )));
-                                    },
-                                    child: ListTile(
-                                      leading: Container(
-                                        width: 100,
-                                        height: 150,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                              imageUrl: item.backdropPath,
-                                              progressIndicatorBuilder: (context,
-                                                      url, downloadProgress) =>
-                                                  Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                    value: downloadProgress
-                                                        .progress,
-                                                    backgroundColor: Colors.red,
-                                                  )),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Container(child: Image.asset("assets/download.png",height: 500,width: 500,)),
-                                              fit: BoxFit.cover),
-                                        ),
-                                      ),
-                                      title: Text(item.originalTitle,
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                      subtitle: RatingBarIndicator(
-                                        rating: double?.tryParse(
-                                                item.voteAverage.toString()) ??
-                                            1,
-                                        itemBuilder: (context, index) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        itemCount: 10,
-                                        itemSize: 10.0,
-                                        direction: Axis.horizontal,
-                                      ),
-                                      trailing: IconButton(
-                                        icon: Icon(Icons.arrow_forward_rounded),
-                                        onPressed: () {Navigator.push(
+                      builderDelegate: PagedChildBuilderDelegate<Results>(
+                        noItemsFoundIndicatorBuilder: (context) => Center(child: CircularProgressIndicator(),),
+                          itemBuilder: (context, item, index) => Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (BuildContext context) =>
                                                     DetailedScreen(
                                                       movieResult: item,
-                                                    )));},
+                                                    )));
+                                      },
+                                      child: ListTile(
+                                        leading: Container(
+                                          width: 100,
+                                          height: 150,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: CachedNetworkImage(
+                                                imageUrl: item.backdropPath,
+                                                progressIndicatorBuilder: (context,
+                                                        url, downloadProgress) =>
+                                                    Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                      value: downloadProgress
+                                                          .progress,
+                                                      backgroundColor: Colors.red,
+                                                    )),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Container(child: Image.asset("assets/download.png",fit: BoxFit.cover,)),
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        title: Text(item.originalTitle,
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                        subtitle: RatingBarIndicator(
+                                          rating: double?.tryParse(
+                                                  item.voteAverage.toString()) ??
+                                              1,
+                                          itemBuilder: (context, index) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          itemCount: 10,
+                                          itemSize: 10.0,
+                                          direction: Axis.horizontal,
+                                        ),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.arrow_forward_rounded),
+                                          onPressed: () {Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (BuildContext context) =>
+                                                      DetailedScreen(
+                                                        movieResult: item,
+                                                      )));},
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Divider(
-                                  color: Colors.grey,
-                                )
-                              ],
-                            )),
+                                  Divider(
+                                    color: Colors.grey,
+                                  )
+                                ],
+                              )),
+                    ),
                   ),
                 )
               else

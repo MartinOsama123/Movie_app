@@ -50,7 +50,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                                 backgroundColor: Colors.red,
                               )),
                           errorWidget: (context, url, error) =>
-                              Container(child: Image.asset("assets/download.png",height: 500,width: 500,)),
+                              Container(child: Image.asset("assets/download.png",fit: BoxFit.cover,)),
                           fit: BoxFit.cover)),
                 ),
                 Positioned(

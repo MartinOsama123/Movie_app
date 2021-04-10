@@ -21,12 +21,12 @@ class FavoriteScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                     onTap: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    DetailedScreen()
-                                    ));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (BuildContext context) =>
+                        //             DetailedScreen()
+                        //             ));
 
                     },
                     child: ListTile(
@@ -44,7 +44,7 @@ class FavoriteScreen extends StatelessWidget {
                                         backgroundColor: Colors.red,
                                       )),
                               errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
+                                  Container(child: Image.asset("assets/download.png",fit: BoxFit.cover,)),
                               fit: BoxFit.cover),
                         ),
                       ),
