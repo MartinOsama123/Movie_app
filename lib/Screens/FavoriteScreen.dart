@@ -48,7 +48,6 @@ class FavoriteScreen extends StatelessWidget {
                     itemSize: 10.0,
                     direction: Axis.horizontal,
                   ),
-                  trailing: IconButton(icon: Icon(Icons.arrow_forward_rounded)),
                 );
               },
               itemCount: snapshot.data.length,

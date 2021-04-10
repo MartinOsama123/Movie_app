@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 class MovieModel {
 
   var page;
   List<Results> results;
-
 
   MovieModel(
       {
@@ -36,16 +33,12 @@ class MovieModel {
 
 
 class Results {
-
   var _backdropPath;
-
   get backdropPath => "https://image.tmdb.org/t/p/w780/$_backdropPath";
   List<int> genreIds;
   var id;
-
   var originalTitle;
   var overview;
-
   var voteAverage;
   var voteCount;
 

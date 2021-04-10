@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:movie_app/Data.dart';
-import 'package:movie_app/Model/DBModel.dart';
 import 'package:movie_app/Model/MovieModel.dart';
+import 'package:movie_app/Widgets/GenresWidget.dart';
 import 'package:movie_app/Widgets/LikeButtonWidget.dart';
 
 
@@ -62,7 +61,7 @@ class DetailedScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           RatingBarIndicator(
-                            rating: movieResult.voteAverage,
+                            rating: double.tryParse(movieResult.voteAverage.toString()) ?? 1.0,
                             itemBuilder: (context, index) => Icon(
                               Icons.star,
                               color: Colors.amber,
@@ -96,52 +95,4 @@ class DetailedScreen extends StatelessWidget {
 }
 
 
-class GenresWidget extends StatefulWidget {
-  final genresId;
-  const GenresWidget({
-    Key key, this.genresId,
-  }) : super(key: key);
 
-  @override
-  _GenresWidgetState createState() => _GenresWidgetState(genresId);
-}
-
-class _GenresWidgetState extends State<GenresWidget> {
-
-  final genresId;
-
-  _GenresWidgetState(this.genresId);
-
-  Future<Map<int,String>> _fetchGenres() async {
-    return await Data.getGenres();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _fetchGenres(),
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-        return Align(
-          alignment: Alignment.centerLeft,
-          child: SizedBox(
-            height: 45,
-            child: ListView.builder(itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Container(child:  Center(child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 10),
-                  child: Text(snapshot.data[genresId[index]]),
-                )),
-                    decoration: BoxDecoration(color: Colors.blueGrey,borderRadius: BorderRadius.circular(20))),
-              );
-            },shrinkWrap: true,scrollDirection: Axis.horizontal,itemCount: genresId.length,),
-          ),
-        );} else {
-        return CircularProgressIndicator();
-    }
-      },
-
-    );
-  }
-}

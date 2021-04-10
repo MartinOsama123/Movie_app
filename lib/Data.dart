@@ -20,8 +20,7 @@ class Data {
         print(e.toString());
       }
     }
-    print("Finsihed");
-    print("$IP_ADDRESS/now_playing?$API&page=$page");
+
     return movieModel.results;
   }
   static Future<List<Results>> getTopRated({int page = 1}) async {
@@ -36,7 +35,7 @@ class Data {
         print(e.toString());
       }
     }
-    print("Finsihed");
+
     return movieModel.results;
   }
   static Future<List<Results>> searchMovies({String query="",int page = 1}) async {
@@ -51,7 +50,7 @@ class Data {
         print(e.toString());
       }
     }
-    print("$IP_ADDRESS/search/movie?query=$query&$API&page=$page");
+
     return movieModel.results;
   }
 
@@ -67,7 +66,6 @@ class Data {
         print(e.toString());
       }
     }
-
 
     return genreModel.genres;
   }
