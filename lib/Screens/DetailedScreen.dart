@@ -47,7 +47,6 @@ class DetailedScreen extends StatelessWidget {
                             movieResult.originalTitle,
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w600),
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Spacer(),

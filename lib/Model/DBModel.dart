@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:movie_app/Model/MovieModel.dart';
@@ -10,26 +12,25 @@ class Favorite with ChangeNotifier {
   final int id;
   final String name, imageUrl;
   final double averageVote;
+  final Results results;
 
-  Favorite({this.id, this.name, this.imageUrl, this.averageVote});
+  Favorite({this.id, this.name, this.imageUrl, this.averageVote,this.results});
   Map<String, dynamic> toMap() {
     return {'id': id, 'name': name, 'image': imageUrl, 'average': averageVote};
   }
 
   static Future<Database> database;
-   Future<void> insertDog(Favorite favorite) async {
-    // Get a reference to the database.
+   Future<void> insertFavorite(Favorite favorite) async {
+
     final Database db = await database;
 
-    // Insert the Dog into the correct table. You might also specify the
-    // `conflictAlgorithm` to use in case the same dog is inserted twice.
-    //
-    // In this case, replace any previous data.
+    print(favorite.toMap());
     await db.insert(
       'likes',
       favorite.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    print(favorite.results);
     notifyListeners();
   }
 
@@ -38,10 +39,10 @@ class Favorite with ChangeNotifier {
       join(await getDatabasesPath(), 'likes.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE likes(id INTEGER PRIMARY KEY, name TEXT, image TEXT, average INTEGER)",
+          "CREATE TABLE likes(uid INTEGER PRIMARY KEY, id INTEGER , name TEXT, image TEXT, average DOUBLE)",
         );
       },
-      version: 1,
+      version: 2,
     );
   }
 
@@ -49,29 +50,25 @@ class Favorite with ChangeNotifier {
     // Get a reference to the database.
     final Database db = await database;
 
-    // Query the table for all The Dogs.
+
     final List<Map<String, dynamic>> maps = await db.query('likes');
 
-    // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
       return Favorite(
           id: maps[i]['id'],
           name: maps[i]['name'],
           imageUrl: maps[i]['image'],
           averageVote: maps[i]['average']);
-    });
+    }).reversed.toList();
   }
 
-   Future<void> deleteDog(int id) async {
-    // Get a reference to the database.
+   Future<void> deleteFavorite(int id) async {
+
     final db = await database;
 
-    // Remove the Dog from the Database.
     await db.delete(
       'likes',
-      // Use a `where` clause to delete a specific dog.
       where: "id = ?",
-      // Pass the Dog's id as a whereArg to prevent SQL injection.
       whereArgs: [id],
     );
     notifyListeners();

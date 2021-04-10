@@ -15,6 +15,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchQueryController = TextEditingController();
   String searchQuery = "", previousSearch = "";
+  bool _showClearButton = false;
   final PagingController<int, Results> _pagingController =
       PagingController(firstPageKey: 1);
 
@@ -23,6 +24,9 @@ class _SearchScreenState extends State<SearchScreen> {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(searchQuery, pageKey);
     });
+    _searchQueryController.addListener(() { setState(() {
+      _showClearButton = _searchQueryController.text.length > 0;
+    });});
     super.initState();
   }
 
@@ -65,7 +69,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     pagingController: _pagingController,
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
+
                     builderDelegate: PagedChildBuilderDelegate<Results>(
+                      noItemsFoundIndicatorBuilder: (context) => Center(child: CircularProgressIndicator(),),
                         itemBuilder: (context, item, index) => Column(
                               children: [
                                 Padding(
@@ -100,7 +106,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   )),
                                               errorWidget:
                                                   (context, url, error) =>
-                                                      Icon(Icons.error),
+                                                      Container(child: Image.asset("assets/download.png",height: 500,width: 500,)),
                                               fit: BoxFit.cover),
                                         ),
                                       ),
@@ -121,7 +127,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                       ),
                                       trailing: IconButton(
                                         icon: Icon(Icons.arrow_forward_rounded),
-                                        onPressed: () {},
+                                        onPressed: () {Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (BuildContext context) =>
+                                                    DetailedScreen(
+                                                      movieResult: item,
+                                                    )));},
                                       ),
                                     ),
                                   ),
@@ -149,6 +161,8 @@ class _SearchScreenState extends State<SearchScreen> {
         decoration: InputDecoration(
           hintText: "Search Data...",
           contentPadding: const EdgeInsets.all(20),
+
+          suffixIcon: _getClearButton(),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
           hintStyle: TextStyle(color: Colors.grey),
         ),
@@ -164,5 +178,14 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       searchQuery = newQuery;
     });
+  }
+  Widget _getClearButton() {
+    if (!_showClearButton) {
+      return null;
+    }
+    return IconButton(
+      onPressed: () => _searchQueryController.clear(),
+      icon: Icon(Icons.clear),
+    );
   }
 }

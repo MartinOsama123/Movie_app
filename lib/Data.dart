@@ -36,7 +36,25 @@ class Data {
       }
     }
 
+
     return movieModel.results;
+  }
+
+  static Future<Results> getMovie({int id: 0}) async {
+    Results movieModel;
+
+    var response = await http.get(
+        Uri.parse("$IP_ADDRESS/movie/$id?$API"));
+    if (response != null && response.statusCode == 200) {
+      try {
+        movieModel = Results.fromJson(jsonDecode(response.body));
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+    print("$IP_ADDRESS/movie/$id?$API");
+
+    return movieModel;
   }
   static Future<List<Results>> searchMovies({String query="",int page = 1}) async {
     MovieModel movieModel;
@@ -56,7 +74,7 @@ class Data {
 
   static Future<Map<int,String>> getGenres() async {
     GenreModel genreModel;
-    print("$IP_ADDRESS/genre/movie/list?$API");
+
     var response = await http.get(
         Uri.parse("https://api.themoviedb.org/3/genre/movie/list?$API"));
     if (response != null && response.statusCode == 200) {

@@ -30,17 +30,18 @@ class _LikeButtonWidgetState extends State<LikeButtonWidget> {
                   size: 15,
                 ),
                 onPressed: () {
+
                   if(snapshot.data.where((element) => element.id == widget.movieResult.id).isNotEmpty) {
-                    value.deleteDog(widget.movieResult.id);
+                    value.deleteFavorite(widget.movieResult.id);
                   }else {
-                    value.insertDog(Favorite(
+                    value.insertFavorite(Favorite(
+                      results: widget.movieResult as Results,
                         id: widget.movieResult.id,
                         name: widget.movieResult
                             .originalTitle,
                         imageUrl: widget.movieResult
                             .backdropPath,
-                        averageVote: widget.movieResult
-                            .voteAverage));
+                        averageVote: double.tryParse(widget.movieResult.voteAverage.toString())));
                   }
 
                 });
